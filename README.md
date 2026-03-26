@@ -11,7 +11,7 @@ Dietary partitioning occurs when two species sharing the same habitat reduce com
 ---
 
 ## Project Structure
-
+```
 caribou-moose-diet-analysis/
 ├── data/
 │   └── mock_otu_table.csv        # Simulated metabarcoding OTU table
@@ -19,6 +19,7 @@ caribou-moose-diet-analysis/
 │   └── diet_composition.png      # Mean diet composition bar chart
 ├── Caribou_X_Moose.py            # Main analysis script
 └── README.md
+```
 
 ---
 
@@ -55,6 +56,7 @@ Mean relative proportions per species across all seasons reveal clear dietary pa
 - Moose diet is dominated by Salix spp. (willow) and Betula spp. (birch), reflecting their browsing ecology
 - Carex spp. and Poaceae show similar proportions between species, representing shared dietary resources
 
+![Diet Composition](figures/diet_composition.png)
 ---
 
 ## Dependencies
