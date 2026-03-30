@@ -103,3 +103,29 @@ plt.suptitle("Seasonal Diet Composition: Caribou vs Moose", fontsize=15)
 plt.tight_layout()
 plt.savefig("figures/seasonal_comparison.png", dpi=150)
 plt.show()
+
+
+def pianka_overlap(diet1, diet2):
+    # Calculate Pianka's overlap index
+    numerator = np.sum(diet1 * diet2)
+    denominator = np.sqrt(np.sum(diet1**2) * np.sum(diet2**2))
+    return numerator / denominator if denominator > 0 else 0
+
+
+groups = mean_seasonal.to_dict(orient="index")  # convert to dict for easier access
+
+comparisons = [
+    ("Caribou", "Summer", "Moose", "Summer"),
+    ("Caribou", "Winter", "Moose", "Winter"),
+    ("Caribou", "Summer", "Caribou", "Winter"),
+    ("Moose", "Summer", "Moose", "Winter"),
+]
+
+print("Diet Overlap (Pianka's Index):")
+print("-" * 40)
+
+for sp1, se1, sp2, se2 in comparisons:
+    diet1 = np.array(list(groups[(sp1, se1)].values()))
+    diet2 = np.array(list(groups[(sp2, se2)].values()))
+    overlap = pianka_overlap(diet1, diet2)
+    print(f"{sp1} {se1} vs {sp2} {se2}: {overlap:.3f}")
