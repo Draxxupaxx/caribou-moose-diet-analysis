@@ -62,10 +62,6 @@ print(proportions.sum(axis=1).head())  # should all be 1.0
 proportions["species"] = metadata["species"]
 proportions["season"] = metadata["season"]
 
-# Add metadata back so we can group
-proportions["species"] = metadata["species"]
-proportions["season"] = metadata["season"]
-
 # Calculate mean proportion per species per plant
 mean_diet = proportions.groupby("species")[plants].mean()
 
@@ -81,4 +77,29 @@ plt.xticks(rotation=45, ha="right")
 plt.legend(title="Species")
 plt.tight_layout()
 plt.savefig("figures/diet_composition.png", dpi=150)
+plt.show()
+
+mean_seasonal = proportions.groupby(["species", "season"])[plants].mean()
+print(mean_seasonal)
+
+fig, axes = plt.subplots(1, 2, figsize=(16, 6), sharey=True)
+
+species_list = ["Caribou", "Moose"]
+colors = ["#4C72B0", "#DD8452"]
+
+for i, species in enumerate(species_list):
+    # Pull out just this species from the grouped table
+    species_data = mean_seasonal.loc[species]
+
+    species_data.T.plot(kind="bar", ax=axes[i], color=colors, width=0.7)
+
+    axes[i].set_title(f"{species} Diet by Season", fontsize=13)
+    axes[i].set_xlabel("Plant Taxa", fontsize=11)
+    axes[i].set_ylabel("Mean Relative Proportion", fontsize=11)
+    axes[i].tick_params(axis="x", rotation=45)
+    axes[i].legend(title="Season")
+
+plt.suptitle("Seasonal Diet Composition: Caribou vs Moose", fontsize=15)
+plt.tight_layout()
+plt.savefig("figures/seasonal_comparison.png", dpi=150)
 plt.show()
