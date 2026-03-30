@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 np.random.seed(42)  # for reproducibility
 
@@ -129,3 +130,31 @@ for sp1, se1, sp2, se2 in comparisons:
     diet2 = np.array(list(groups[(sp2, se2)].values()))
     overlap = pianka_overlap(diet1, diet2)
     print(f"{sp1} {se1} vs {sp2} {se2}: {overlap:.3f}")
+
+proportions_sorted = proportions.sort_values(["species", "season"])
+
+heatmap_data = proportions_sorted.drop(columns=["species", "season"])
+
+row_colors = proportions_sorted["species"].map(
+    {"Caribou": "#4C72B0", "Moose": "#DD8452"}
+)
+
+plt.figure(figsize=(12, 10))
+
+
+sns.heatmap(
+    heatmap_data,
+    cmap="YlOrRd",
+    linewidths=0.3,
+    linecolor="grey",
+    cbar_kws={"label": "Relative Proportion"},
+    yticklabels=True,
+)
+
+plt.title("Diet Composition Heatmap: All Samples", fontsize=14)
+plt.xlabel("Plant Taxa", fontsize=12)
+plt.ylabel("Sample ID", fontsize=12)
+plt.xticks(rotation=45, ha="right")
+plt.tight_layout()
+plt.savefig("figures/heatmap.png", dpi=150)
+plt.show()
