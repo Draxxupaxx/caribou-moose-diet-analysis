@@ -3,6 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from scipy.spatial.distance import braycurtis
+from scipy.spatial.distance import squareform
+from sklearn.manifold import MDS
+
 np.random.seed(42)  # for reproducibility
 
 plants = [
@@ -157,4 +161,62 @@ plt.ylabel("Sample ID", fontsize=12)
 plt.xticks(rotation=45, ha="right")
 plt.tight_layout()
 plt.savefig("figures/heatmap.png", dpi=150)
+plt.show()
+
+pcoa_data = proportions.drop(columns=["species", "season"])
+
+n = len(pcoa_data)
+bc_matrix = np.zeros((n, n))
+
+for i in range(n):
+    for j in range(n):
+        bc_matrix[i, j] = braycurtis(pcoa_data.iloc[i], pcoa_data.iloc[j])
+
+print(bc_matrix.shape)
+print(bc_matrix[:3, :3])  # print a small portion of the distance matrix
+
+# Step 3 -- Run PCoA using MDS
+mds = MDS(n_components=2, dissimilarity="precomputed", random_state=42)
+coords = mds.fit_transform(bc_matrix)
+
+# Step 4 -- Plot
+fig, ax = plt.subplots(figsize=(10, 7))
+
+groups = {
+    "Caribou Summer": ("#4C72B0", "o"),
+    "Caribou Winter": ("#4C72B0", "^"),
+    "Moose Summer": ("#DD8452", "o"),
+    "Moose Winter": ("#DD8452", "^"),
+}
+
+for idx, row in proportions.iterrows():
+    sp = row["species"]
+    se = row["season"]
+    label = f"{sp} {se}"
+    color, marker = groups[label]
+
+    sample_idx = list(proportions.index).index(idx)
+
+    ax.scatter(
+        coords[sample_idx, 0],
+        coords[sample_idx, 1],
+        c=color,
+        marker=marker,
+        s=80,
+        label=label,
+    )
+
+# Clean up legend duplicates
+handles, labels = ax.get_legend_handles_labels()
+by_label = dict(zip(labels, handles))
+ax.legend(by_label.values(), by_label.keys(), title="Group")
+
+ax.set_xlabel("PCoA Axis 1", fontsize=12)
+ax.set_ylabel("PCoA Axis 2", fontsize=12)
+ax.set_title("PCoA of Dietary Composition (Bray-Curtis)", fontsize=14)
+ax.axhline(0, color="grey", linewidth=0.5, linestyle="--")
+ax.axvline(0, color="grey", linewidth=0.5, linestyle="--")
+
+plt.tight_layout()
+plt.savefig("figures/pcoa.png", dpi=150)
 plt.show()
