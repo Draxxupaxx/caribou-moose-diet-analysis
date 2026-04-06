@@ -1,5 +1,4 @@
 # Caribou x Moose Dietary Partitioning Analysis
-# Caribou x Moose Dietary Partitioning Analysis
 
 A Python-based analysis exploring dietary partitioning between caribou (*Rangifer tarandus*) and moose (*Alces alces*) using simulated fecal DNA metabarcoding data. This project mimics the type of data generated from real metabarcoding studies and applies ecological analysis and visualization techniques to quantify dietary overlap and niche partitioning across species and seasons.
 
