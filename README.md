@@ -14,7 +14,7 @@ This project simulates OTU (Operational Taxonomic Unit) tables -- the standard o
 ---
 
 ## Project Structure
-
+```
 caribou-moose-diet-analysis/
 ├── figures/
 │   ├── diet_composition.png       # Mean diet composition by species
@@ -23,7 +23,7 @@ caribou-moose-diet-analysis/
 │   └── pcoa.png                   # PCoA ordination plot
 ├── Caribou_X_Moose.py             # Main analysis script
 └── README.md
-
+```
 ---
 
 ## Methods
